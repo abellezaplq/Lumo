@@ -2128,9 +2128,9 @@ function openRefEdit(ri,ei){
   var e=S.refs[ri].entries[ei];
   var existing=qs('ref-edit-overlay');if(existing)existing.remove();
   var ov=document.createElement('div');ov.id='ref-edit-overlay';
-  ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:900;display:flex;align-items:flex-end;justify-content:center;';
+  ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:900;display:flex;align-items:center;justify-content:center;padding:16px;';
   var box=document.createElement('div');
-  box.style.cssText='background:var(--bg);border-radius:16px 16px 0 0;padding:16px;width:100%;max-width:520px;max-height:80vh;overflow-y:auto;';
+  box.style.cssText='background:var(--bg);border-radius:14px;padding:16px;width:100%;max-width:520px;max-height:88vh;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,.4);';
 
   // Unit options
   var units=[];

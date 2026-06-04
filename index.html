@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Lumo</title>
+<title>Lumo — Fresh Start</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg viewBox='0 0 1024 1024' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='.3' y2='1'%3E%3Cstop offset='0%25' stop-color='%23142640'/%3E%3Cstop offset='100%25' stop-color='%23091729'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1024' height='1024' rx='224' fill='url(%23g)'/%3E%3Crect x='290' y='800' width='444' height='54' rx='14' fill='white'/%3E%3Cpolygon points='358,800 666,800 592,335 432,335' fill='white'/%3E%3Crect x='432' y='246' width='160' height='82' rx='10' fill='white'/%3E%3Crect x='446' y='258' width='132' height='58' rx='7' fill='%230D2B4A'/%3E%3Cpolygon points='422,246 602,246 512,158' fill='white'/%3E%3Ccircle cx='512' cy='185' r='28' fill='%23FFD166' opacity='.8'/%3E%3Ccircle cx='512' cy='185' r='12' fill='white'/%3E%3C/svg%3E">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-192.png">
@@ -537,7 +537,7 @@ input[type=checkbox]{width:15px;height:15px;accent-color:var(--teal);cursor:poin
         <span style="font-size:1.1rem;color:var(--t2);">A</span>
       </div>
     </div>
-    <div class="tog-row"><div><div style="font-size:.9rem;color:var(--t);">Timer end alert</div></div><div class="tog on" onclick="this.classList.toggle('on')"><div class="tok"></div></div></div>
+    <div class="tog-row"><div><div style="font-size:.9rem;color:var(--t);">Timer end alert</div><div style="font-size:.72rem;color:var(--t3);">Beep + vibration when timer ends</div></div><div class="tog on" id="tog-alert" onclick="togAlert()"><div class="tok"></div></div></div>
   </div>
 
   <!-- GitHub Sync -->
@@ -786,31 +786,29 @@ var DECK_COLORS=['#534AB7','#0F6E56','#D85A30','#185FA5','#BA7517','#8B2FC9','#0
 var selDeckColor=DECK_COLORS[0];
 
 var S={
-  tasks:[
-    {nm:'ADME mechanisms',cat:'Pharmacology',pri:2,est:1500,rem:1500,ot:0,over:false,done:false,notes:'Focus on first-pass effect and bioavailability.',rec:'daily',days:[]},
-    {nm:'Log P worksheet',cat:'Med Chem',pri:2,est:2400,rem:2400,ot:0,over:false,done:false,notes:'Chapters 4-5. Draw structures from memory first.',rec:'none',days:[]},
-    {nm:'Drug receptor types',cat:'Pharmacology',pri:1,est:1920,rem:1920,ot:0,over:false,done:false,notes:'',rec:'none',days:[]},
-  ],
+  tasks:[],
   done:[],
-  decks:[
-    {nm:'Pharmacology',col:'#534AB7',cards:[{q:'Henderson-Hasselbalch equation?',a:'pH = pKa + log([A-]/[HA])'},{q:'Define bioavailability',a:'Fraction reaching systemic circulation unchanged'},{q:'First-pass metabolism?',a:'Hepatic metabolism before systemic circulation'}],idx:0,kn:0,ag:0},
-    {nm:'Med Chem',col:'#0F6E56',cards:[{q:'What does log P measure?',a:'Lipophilicity, octanol/water partition coefficient'},{q:'Lipinski Rule of 5?',a:'MW<500, logP<5, HBD<5, HBA<10'},{q:'Define pharmacophore',a:'Structural features responsible for biological activity'}],idx:0,kn:0,ag:0},
-    {nm:'Biochemistry',col:'#D85A30',cards:[{q:'What is Km?',a:'[S] at half-maximum reaction velocity'},{q:'Define Vmax',a:'Max rate when enzyme is fully saturated'},{q:'Beer-Lambert law?',a:'A = ecl (epsilon x c x l)'}],idx:0,kn:0,ag:0},
-  ],
-  refs:[
-    {unit:'Pharmacokinetics',open:true,entries:[{title:'Henderson-Hasselbalch',content:'pH = pKa + log([A-]/[HA])',type:'Formula'},{title:'Volume of distribution',content:'Vd = Dose / C0',type:'Formula'},{title:'Elimination half-life',content:'t1/2 = 0.693 / ke',type:'Formula'}]},
-    {unit:'Med Chem',open:true,entries:[{title:'Log P',content:'log P = log([drug]oct / [drug]water)',type:'Formula'},{title:'Lipinski Rule of Five',content:'MW<500, logP<5, HBD<5, HBA<10 for oral bioavailability',type:'Theory'}]},
-    {unit:'Enzyme kinetics',open:false,entries:[{title:'Michaelis-Menten',content:'V = Vmax[S] / (Km + [S])',type:'Formula'},{title:'Km interpretation',content:'Km = [S] at 1/2 Vmax. Low Km = high substrate affinity. Competitive inhibitors increase apparent Km without affecting Vmax.',type:'Theory'}]},
-  ],
+  decks:[],
+  refs:[],
   customQs:[],
   pm:{run:false,work:true,sec:1500,wMin:25,bMin:5,sess:4,cur:1,log:[],task:'',startT:null},
   scratch:'',
-  settings:{dark:false,fontSize:13,taskCats:['Pharmacology','Med Chem','Biochemistry','Pharmacokinetics','Clinical','Lab','Toxicology'],refTypes:['Formula','Theory','Lab note'],refUnits:['Pharmacokinetics','Pharmacology','Med Chem','Biochemistry','Enzyme kinetics']},
+  settings:{
+    dark:false,
+    fontSize:13,
+    taskCats:[],
+    refTypes:[],
+    refUnits:[],
+    timerAlert:true
+  },
   github:{token:'',gistId:'',lastSync:null},
   dayStats:[
-    {done:0,time:0,ot:0,pomo:0,subs:[]},{done:0,time:0,ot:0,pomo:0,subs:[]},
-    {done:0,time:0,ot:0,pomo:0,subs:[]},{done:0,time:0,ot:0,pomo:0,subs:[]},
-    {done:0,time:0,ot:0,pomo:0,subs:[]},{done:0,time:0,ot:0,pomo:0,subs:[]},
+    {done:0,time:0,ot:0,pomo:0,subs:[]},
+    {done:0,time:0,ot:0,pomo:0,subs:[]},
+    {done:0,time:0,ot:0,pomo:0,subs:[]},
+    {done:0,time:0,ot:0,pomo:0,subs:[]},
+    {done:0,time:0,ot:0,pomo:0,subs:[]},
+    {done:0,time:0,ot:0,pomo:0,subs:[]},
     {done:0,time:0,ot:0,pomo:0,subs:[]}
   ]
 };
@@ -939,7 +937,7 @@ function load(){
     if(d.customQs)S.customQs=d.customQs;
     if(d.pm)S.pm=Object.assign({run:false,work:true,sec:1500,wMin:25,bMin:5,sess:4,cur:1,log:[],task:'',startT:null},d.pm);
     if(d.scratch)S.scratch=d.scratch;
-    if(d.settings)S.settings=Object.assign({dark:false,fontSize:13,taskCats:['Pharmacology','Med Chem','Biochemistry','Pharmacokinetics','Clinical','Lab','Toxicology'],refTypes:['Formula','Theory','Lab note'],refUnits:['Pharmacokinetics','Pharmacology','Med Chem','Biochemistry','Enzyme kinetics']},d.settings);
+    if(d.settings)S.settings=Object.assign({dark:false,fontSize:13,taskCats:['Pharmacology','Med Chem','Biochemistry','Pharmacokinetics','Clinical','Lab','Toxicology'],refTypes:['Formula','Theory','Lab note'],refUnits:['Pharmacokinetics','Pharmacology','Med Chem','Biochemistry','Enzyme kinetics'],timerAlert:true},d.settings);
     if(d.github)S.github=Object.assign({token:'',gistId:'',lastSync:null},d.github);
     if(d.dayStats&&Array.isArray(d.dayStats)&&d.dayStats.length===7)S.dayStats=d.dayStats;
   }catch(e){}
@@ -950,6 +948,7 @@ function applySettings(){
   var sl=qs('font-sl');if(sl)sl.value=S.settings.fontSize;
   var fl=qs('fs-lbl');if(fl)fl.textContent=S.settings.fontSize+'px';
   var td=qs('tog-dk');if(td){if(S.settings.dark)td.classList.add('on');else td.classList.remove('on');}
+  var ta=qs('tog-alert');if(ta){if(S.settings.timerAlert!==false)ta.classList.add('on');else ta.classList.remove('on');}
 }
 function togDk(){S.settings.dark=!S.settings.dark;applySettings();save();}
 function setFS(v){S.settings.fontSize=parseInt(v);document.documentElement.style.setProperty('--fs',v+'px');var fl=qs('fs-lbl');if(fl)fl.textContent=v+'px';save();}
@@ -1149,6 +1148,7 @@ function toggleTT(i){
         t.rem=Math.max(0,t.rem-1);
         if(t.rem===0){
           t.over=true;clearInterval(taskIvs[i]);delete taskIvs[i];t.run=false;
+          playAlert('⏰ '+t.nm+' — time\'s up!');
           var c=qs('tcd'+i);if(c){c.textContent=fmt(t.est);c.className='tcd xout';c.style.color='var(--t3)';}
           var o=qs('tot'+i);if(o)o.style.display='block';
           taskIvs[i]=setInterval(function(){t.ot++;var o2=qs('tot'+i);if(o2)o2.textContent='+'+fmt(t.ot);},1000);
@@ -1224,6 +1224,7 @@ var pmIv=setInterval(function(){
   if(S.pm.sec<=0){
     var end=new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
     var wasWork=S.pm.work;
+    playAlert(wasWork?'🍅 Focus session done!':'☕ Break over — back to work!');
     if(wasWork)S.pm.log.unshift({task:S.pm.task||'Work session',dur:S.pm.wMin*60,start:S.pm.startT||'--',end:end,type:'work',session:'focus'});
     if(wasWork){S.dayStats[todayIdx()].pomo++;S.dayStats[todayIdx()].time+=S.pm.wMin;}
     S.pm.work=!S.pm.work;S.pm.sec=(S.pm.work?S.pm.wMin:S.pm.bMin)*60;
@@ -1486,9 +1487,10 @@ async function syncGitHub(){
   var sb=qs('sync-btn');if(sb)sb.innerHTML='<span class="spinning">&#8645;</span>';
   var status=qs('gh-status');if(status)status.textContent='Syncing...';
   try{
-    // Build payload (exclude sensitive github token from gist)
+    // Build payload — exclude token + display-only settings
     var payload=JSON.parse(JSON.stringify(S));
-    payload.github={gistId:S.github.gistId,lastSync:S.github.lastSync};// no token in gist
+    payload.github={gistId:S.github.gistId,lastSync:S.github.lastSync};
+    if(payload.settings){delete payload.settings.dark;delete payload.settings.fontSize;}
     var fileContent=JSON.stringify(payload,null,2);
     var method=S.github.gistId?'PATCH':'POST';
     var url=S.github.gistId?'https://api.github.com/gists/'+S.github.gistId:'https://api.github.com/gists';
@@ -1532,7 +1534,9 @@ async function pullGitHub(){
     if(remote.customQs)S.customQs=remote.customQs;
     if(remote.pm)S.pm=Object.assign({run:false},remote.pm);
     if(remote.scratch)S.scratch=remote.scratch;
-    if(remote.settings)S.settings=Object.assign({dark:false,fontSize:13,taskCats:['Pharmacology','Med Chem','Biochemistry','Pharmacokinetics','Clinical','Lab','Toxicology'],refTypes:['Formula','Theory','Lab note'],refUnits:['Pharmacokinetics','Pharmacology','Med Chem','Biochemistry','Enzyme kinetics']},remote.settings);
+    var _localDark=S.settings.dark,_localFS=S.settings.fontSize;
+    if(remote.settings)S.settings=Object.assign({dark:false,fontSize:13,taskCats:['Pharmacology','Med Chem','Biochemistry','Pharmacokinetics','Clinical','Lab','Toxicology'],refTypes:['Formula','Theory','Lab note'],refUnits:['Pharmacokinetics','Pharmacology','Med Chem','Biochemistry','Enzyme kinetics'],timerAlert:true},remote.settings);
+    S.settings.dark=_localDark;S.settings.fontSize=_localFS;
     if(remote.dayStats&&Array.isArray(remote.dayStats)&&remote.dayStats.length===7)S.dayStats=remote.dayStats;
     S.github=savedGh;
     save();applySettings();
@@ -1598,14 +1602,33 @@ function hmStop(){hm.active=false;clearTimeout(hm.t);var we=qs('hm-word');if(we)
 /* ── Reference ── */
 function renderRefs(){
   var rl=qs('ref-list');if(!rl)return;rl.innerHTML='';
-  S.refs.forEach(function(r){
+  S.refs.forEach(function(r,ri){
     var c=document.createElement('div');c.className='card';
     var hdr=document.createElement('div');
     hdr.style.cssText='display:flex;align-items:center;justify-content:space-between;cursor:pointer;'+(r.open?'margin-bottom:6px':'');
-    hdr.innerHTML='<span style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--t2);">'+r.unit+'</span><span style="font-size:.78rem;color:var(--t3);">'+(r.open?'v':'>')+'</span>';
+    var chevron=document.createElement('span');chevron.style.cssText='font-size:.78rem;color:var(--t3);';chevron.textContent=r.open?'v':'>';
+    var titleSpan=document.createElement('span');titleSpan.style.cssText='font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--t2);flex:1;';titleSpan.textContent=r.unit;
+    hdr.appendChild(titleSpan);hdr.appendChild(chevron);
     hdr.addEventListener('click',function(){r.open=!r.open;renderRefs();});
     c.appendChild(hdr);
-    if(r.open){var body=document.createElement('div');r.entries.forEach(function(e){var row=document.createElement('div');row.className='re';row.innerHTML='<div style="font-size:.78rem;font-weight:700;color:var(--t);margin-bottom:2px;">'+e.title+'</div>'+(e.type==='Theory'?'<div style="font-size:.82rem;color:var(--t2);line-height:1.65;">'+e.content+'</div>':'<div style="font-size:.78rem;font-family:ui-monospace,monospace;color:var(--t2);">'+e.content+'</div>');body.appendChild(row);});c.appendChild(body);}
+    if(r.open){
+      var body=document.createElement('div');
+      r.entries.forEach(function(e,ei){
+        var row=document.createElement('div');row.className='re';
+        row.style.cssText='position:relative;padding-right:28px;';
+        row.innerHTML='<div style="font-size:.78rem;font-weight:700;color:var(--t);margin-bottom:2px;">'+e.title+'<span style="font-size:.65rem;color:var(--t3);margin-left:5px;font-weight:400;">'+e.type+'</span></div>'+
+          (e.type==='Theory'?'<div style="font-size:.82rem;color:var(--t2);line-height:1.65;">'+e.content+'</div>':'<div style="font-size:.78rem;font-family:ui-monospace,monospace;color:var(--t2);">'+e.content+'</div>');
+        var editBtn=document.createElement('button');
+        editBtn.className='sm';
+        editBtn.style.cssText='position:absolute;top:2px;right:0;font-size:.6rem!important;padding:.1em .35em!important;';
+        editBtn.textContent='\u270e';
+        editBtn.title='Edit';
+        editBtn.addEventListener('click',function(ev){ev.stopPropagation();openRefEdit(ri,ei);});
+        row.appendChild(editBtn);
+        body.appendChild(row);
+      });
+      c.appendChild(body);
+    }
     rl.appendChild(c);
   });
 }
@@ -1706,7 +1729,7 @@ function clearAll(){
   var empty={tasks:[],done:[],decks:[],refs:[],customQs:[],
     pm:{run:false,work:true,sec:1500,wMin:25,bMin:5,sess:4,cur:1,log:[],task:'',startT:null},
     scratch:'',
-    settings:{dark:S.settings.dark,fontSize:S.settings.fontSize,taskCats:['Pharmacology','Med Chem','Biochemistry','Pharmacokinetics','Clinical','Lab','Toxicology'],refTypes:S.settings.refTypes||['Formula','Theory','Lab note'],refUnits:S.settings.refUnits||['Pharmacokinetics','Pharmacology','Med Chem','Biochemistry']},
+    settings:{dark:S.settings.dark,fontSize:S.settings.fontSize,taskCats:[],refTypes:[],refUnits:[],timerAlert:true},
     github:S.github,
     dayStats:[
       {done:0,time:0,ot:0,pomo:0,subs:[]},{done:0,time:0,ot:0,pomo:0,subs:[]},
@@ -2034,8 +2057,181 @@ function removeRefUnit(i){
   save();refreshRefUnitSelects();
 }
 
+/* ── Timer alert (Web Audio + vibration) ── */
+function togAlert(){
+  S.settings.timerAlert=!S.settings.timerAlert;
+  var ta=qs('tog-alert');
+  if(ta){if(S.settings.timerAlert)ta.classList.add('on');else ta.classList.remove('on');}
+  save();
+}
+
+/* Global AudioContext — initialised on first user gesture (required for iOS) */
+var _AC=null;
+function _initAC(){
+  try{
+    if(!_AC)_AC=new(window.AudioContext||window.webkitAudioContext)();
+    if(_AC&&_AC.state==='suspended')_AC.resume();
+  }catch(e){}
+}
+document.addEventListener('touchstart',_initAC,{passive:true});
+document.addEventListener('click',_initAC,{passive:true});
+
+function playAlert(msg){
+  if(S.settings.timerAlert===false)return;
+  /* Topbar pulse — bright amber against dark bg */
+  var tb=document.querySelector('.topbar');
+  if(tb){
+    var origBg=tb.style.background||'';
+    var pt=0;
+    (function pulse(){
+      tb.style.background=(pt%2===0)?'#d97706':'';
+      if(++pt<8)setTimeout(pulse,250);
+      else tb.style.background=origBg;
+    })();
+  }
+  /* Audio via pre-unlocked context */
+  try{
+    _initAC();
+    var ctx=_AC;
+    if(!ctx||ctx.state==='suspended')throw new Error('locked');
+    function beep(freq,start,dur,vol){
+      var o=ctx.createOscillator(),g=ctx.createGain();
+      o.connect(g);g.connect(ctx.destination);
+      o.type='sine';o.frequency.value=freq;
+      g.gain.setValueAtTime(vol||0.25,ctx.currentTime+start);
+      g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+start+dur);
+      o.start(ctx.currentTime+start);
+      o.stop(ctx.currentTime+start+dur+0.05);
+    }
+    /* ~3 second sequence */
+    beep(880, 0.00,0.18); beep(1100,0.22,0.18);
+    beep(880, 0.60,0.18); beep(1100,0.82,0.18);
+    beep(880, 1.20,0.18); beep(1100,1.42,0.28);
+    beep(1320,1.90,0.55,0.18);
+  }catch(e){}
+  /* Prominent toast for timer alerts */
+  if(msg){
+    var at=document.createElement('div');
+    at.style.cssText='position:fixed;bottom:calc(90px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);'
+      +'background:#d97706;color:#fff;padding:10px 22px;border-radius:12px;font-size:.92rem;font-weight:600;'
+      +'z-index:9000;box-shadow:0 4px 20px rgba(0,0,0,.4);text-align:center;white-space:nowrap;';
+    at.textContent=msg;
+    document.body.appendChild(at);
+    setTimeout(function(){at.style.transition='opacity .4s';at.style.opacity='0';setTimeout(function(){at.remove();},400);},5000);
+  }
+}
+
+/* ── Reference entry edit ── */
+var _editRi=-1,_editEi=-1;
+function openRefEdit(ri,ei){
+  _editRi=ri;_editEi=ei;
+  var e=S.refs[ri].entries[ei];
+  var existing=qs('ref-edit-overlay');if(existing)existing.remove();
+  var ov=document.createElement('div');ov.id='ref-edit-overlay';
+  ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:900;display:flex;align-items:flex-end;justify-content:center;';
+  var box=document.createElement('div');
+  box.style.cssText='background:var(--bg);border-radius:16px 16px 0 0;padding:16px;width:100%;max-width:520px;max-height:80vh;overflow-y:auto;';
+
+  // Unit options
+  var units=[];
+  (S.settings.refUnits||[]).forEach(function(u){if(units.indexOf(u)===-1)units.push(u);});
+  S.refs.forEach(function(r){if(units.indexOf(r.unit)===-1)units.push(r.unit);});
+  var unitOpts=units.map(function(u){
+    return '<option value="'+u+'"'+(u===S.refs[ri].unit?' selected':'')+'>'+u+'</option>';
+  }).join('');
+
+  // Type options
+  var types=S.settings.refTypes||['Formula','Theory','Lab note'];
+  var typeOpts=types.map(function(t){
+    return '<option value="'+t+'"'+(t===e.type?' selected':'')+'>'+t+'</option>';
+  }).join('');
+
+  // Build form HTML
+  var formHTML = '<div style="font-size:.85rem;font-weight:700;color:var(--t);margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;">'
+    +'Edit entry'
+    +'<button class="sm" id="ref-edit-close">&#10005;</button>'
+    +'</div>'
+    +'<div class="form-row"><div class="form-lbl">Unit / category</div>'
+    +'<select id="edit-unit">'+unitOpts+'</select></div>'
+    +'<div class="form-row"><div class="form-lbl">Title</div>'
+    +'<input type="text" id="edit-title"></div>'
+    +'<div class="form-row"><div class="form-lbl">Type</div>'
+    +'<select id="edit-type">'+typeOpts+'</select></div>'
+    +'<div class="form-row"><div class="form-lbl">Content</div>'
+    +'<div style="display:flex;gap:3px;flex-wrap:wrap;margin-bottom:5px;">'
+    +'<button class="sm" onclick="document.execCommand(\'bold\')"><b>B</b></button>'
+    +'<button class="sm" onclick="document.execCommand(\'italic\')"><i>I</i></button>'
+    +'<button class="sm" onclick="document.execCommand(\'superscript\')">x&sup2;</button>'
+    +'<button class="sm" onclick="document.execCommand(\'subscript\')">x&#8322;</button>'
+    +'<button class="sm" onclick="toggleHighlight(\'edit-content\')"><span style="background:#FAC775;padding:0 2px;">H</span></button>'
+    +'</div>'
+    +'<div contenteditable="true" id="edit-content" '
+    +'style="min-height:80px;background:var(--bg2);border:1.5px solid var(--b);border-radius:var(--r);padding:8px;font-size:.88rem;color:var(--t);outline:none;line-height:1.65;"'
+    +' onkeydown="refEditorKeydown(event,\'edit-content\')">'
+    +'</div></div>'
+    +'<div style="display:flex;gap:8px;margin-top:10px;">'
+    +'<button class="bp" style="flex:1;" id="ref-edit-save">Save</button>'
+    +'<button class="sm bd" id="ref-edit-del-btn">Delete</button>'
+    +'<button class="sm" id="ref-edit-cancel">Cancel</button>'
+    +'</div>'
+    +'<div id="ref-del-confirm" style="display:none;margin-top:8px;padding:10px;background:#2d1010;border:1px solid var(--red);border-radius:var(--r);text-align:center;">'
+    +'<div style="font-size:.82rem;color:#e84855;margin-bottom:8px;">Delete this entry permanently?</div>'
+    +'<div style="display:flex;gap:8px;justify-content:center;">'
+    +'<button class="sm bd" id="ref-del-yes">Yes, delete</button>'
+    +'<button class="sm" id="ref-del-no">Cancel</button>'
+    +'</div></div>';
+
+  box.innerHTML = formHTML;
+  ov.appendChild(box);
+  document.body.appendChild(ov);
+
+  // Set values that need DOM to exist first
+  var ti = qs('edit-title'); if(ti) ti.value = e.title;
+  var ec = qs('edit-content'); if(ec) ec.innerHTML = e.content;
+
+  // Wire buttons
+  qs('ref-edit-close').addEventListener('click', function(){ov.remove();});
+  qs('ref-edit-cancel').addEventListener('click', function(){ov.remove();});
+  qs('ref-edit-save').addEventListener('click', saveRefEdit);
+  qs('ref-edit-del-btn').addEventListener('click', function(){
+    qs('ref-del-confirm').style.display='block';
+  });
+  qs('ref-del-yes').addEventListener('click', deleteRefEntry);
+  qs('ref-del-no').addEventListener('click', function(){
+    qs('ref-del-confirm').style.display='none';
+  });
+}
+
+function saveRefEdit(){
+  if(_editRi<0||_editEi<0)return;
+  var newUnit=qs('edit-unit')?qs('edit-unit').value:'General';
+  var newTitle=qs('edit-title')?qs('edit-title').value.trim():'';
+  var newType=qs('edit-type')?qs('edit-type').value:'Formula';
+  var newContent=qs('edit-content')?qs('edit-content').innerHTML.trim():'';
+  if(!newTitle||!newContent){toast('Title and content required.');return;}
+  var entry=S.refs[_editRi].entries.splice(_editEi,1)[0];
+  if(S.refs[_editRi].entries.length===0)S.refs.splice(_editRi,1);
+  entry.title=newTitle;entry.type=newType;entry.content=newContent;
+  if(S.settings.refUnits&&S.settings.refUnits.indexOf(newUnit)===-1)S.settings.refUnits.push(newUnit);
+  var target=S.refs.find(function(r){return r.unit===newUnit;});
+  if(target)target.entries.push(entry);
+  else S.refs.push({unit:newUnit,open:true,entries:[entry]});
+  _editRi=-1;_editEi=-1;
+  var ov=qs('ref-edit-overlay');if(ov)ov.remove();
+  save();renderRefs();refreshRefUnitSelects();toast('Entry updated.');
+}
+
+function deleteRefEntry(){
+  if(_editRi<0||_editEi<0)return;
+  S.refs[_editRi].entries.splice(_editEi,1);
+  if(S.refs[_editRi].entries.length===0)S.refs.splice(_editRi,1);
+  _editRi=-1;_editEi=-1;
+  var ov=qs('ref-edit-overlay');if(ov)ov.remove();
+  save();renderRefs();toast('Entry deleted.');
+}
+
 /* ── Boot ── */
-load();applySettings();updatePmUI();renderPmDots();refreshTaskCatSelect();refreshRefTypeSelects();refreshRefUnitSelects();go('tasks');
+localStorage.removeItem('lumo_v2');localStorage.removeItem('lumo_v1');save();applySettings();updatePmUI();renderPmDots();refreshTaskCatSelect();refreshRefTypeSelects();refreshRefUnitSelects();go('tasks');
 </script>
 </body>
 </html>
